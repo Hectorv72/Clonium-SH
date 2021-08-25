@@ -16,8 +16,10 @@
     "express-layout": "^0.1.0",
     "express-partials": "^0.3.0",
     "express-session": "^1.17.2",
+    "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "socket.io": "^4.1.3"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

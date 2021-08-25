@@ -1,50 +1,51 @@
 const express = require('express');
 const path = require('path');
 const middlewares = require('./modules/middlewares');
-const { randomPokemon, verifResponse } = require('./modules/functions');
+const socketIO = require('socket.io');
+const http = require('http');
+// const morgan = require('morgan');
+
+// const { randomPokemon, verifResponse } = require('./modules/functions');
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 // View engine setup
 app.set('view engine', 'ejs');
+app.set('port', port);
 
 app.use('/javascript', express.static(path.join(__dirname, '/resources/js')));
 app.use(middlewares);
 
 app.get('/', (req, res) => {
-  res.render('page/clonium');
-});
-
-app.get('/pokemon', async (req, res) => {
   res.render('page/index');
 });
 
-app.get('/random', async (req, res) => {
-  const pokem = await randomPokemon();
+//
 
-  req.session.pokename = pokem.name;
+//
 
-  res.send(JSON.stringify(pokem));
-});
-
-app.post('/respuesta', (req, res) => {
-  const respuesta = req.body.response.toLowerCase();
-  const pokename = req.session.pokename.toLowerCase();
-
-  res.send(JSON.stringify({ message: verifResponse(pokename, respuesta) }));
-  // res.render('page/return',{ 'mensaje' : mensaje });
-});
+// Socket
 
 app.listen(port, () => console.log('Example app listening on port port!'));
 
-// app.set('resources', __dirname + '/resources')
-// app.set('page','../views');
-// app.set('views', path.join(__dirname, '../views'));
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true
+  }
+});
 
-// const middlewares = [
-//     layout(),
-//     express.static(path.join(__dirname, 'js')),
-// ];
+io.on('connection', (socket) => {
+  socket.on('mensaje', (laik, id) => {
+    io.emit(id, laik);
+  });
+});
 
-// app.use(middlewares);
+server.listen(3000, () => {
+  console.log('funca');
+});
+// app.get('port')
