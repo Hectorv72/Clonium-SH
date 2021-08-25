@@ -47,8 +47,8 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('funca');
-});
+// server.listen(3000, () => {
+//   console.log('funca');
+// });
 
 // app.get('port')
