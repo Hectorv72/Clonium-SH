@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => console.log('Example app listening on port port!'));
 
 const server = http.createServer(app);
+
 const io = socketIO(server, {
   cors: {
     origin: '*',
@@ -40,6 +41,7 @@ const io = socketIO(server, {
 });
 
 io.on('connection', (socket) => {
+  console.log('conectado');
   socket.on('mensaje', (laik, id) => {
     io.emit(id, laik);
   });
@@ -48,4 +50,5 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
   console.log('funca');
 });
+
 // app.get('port')
