@@ -9,14 +9,26 @@
 <style>
     td{
         text-align: center;
+        width: 40px;
+        height: 40px;
+    }
+    div{
+        width: 40px;
+        height: 40px;
+        border-radius: 50px;
+        text-align: center;
     }
     td:hover{
-        background-color: blue;
+        background-color: yellow;
     }
 </style>
 <body>
-    <table id="tabla" border="1" width="400" height="400" ></table>
+    <table id="tabla" border="1" ></table>
+
 </body>
-<script src="javascript/clone.js"></script>
+<!-- <script src="javascript/board.js"></script> -->
+<script type="module" src="javascript/global.js"></script>
+<script type="module" src="javascript/process.js"></script>
+<script type="module" src="javascript/clone.js"></script>
 <script src="javascript/socket.js"></script>
 </html>

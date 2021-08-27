@@ -3,6 +3,8 @@ const path = require('path');
 const middlewares = require('./modules/middlewares');
 const socketIO = require('socket.io');
 const http = require('http');
+const { gameBoard } = require('./modules/components');
+// const routes = require('./routes/routes'); app.use(routes); rutas = require('express').Router
 // const morgan = require('morgan');
 
 // const { randomPokemon, verifResponse } = require('./modules/functions');
@@ -19,6 +21,11 @@ app.use(middlewares);
 
 app.get('/', (req, res) => {
   res.render('page/index');
+});
+
+app.get('/board', (req, res) => {
+  const gameboard = gameBoard(12, 12, 5);
+  res.send(JSON.stringify({ rows: 12, cols: 12, board: gameboard })); //
 });
 
 //
