@@ -23,7 +23,7 @@ const setBoard = (width, height) => {
 
 const setPlayers = (players) => {
   const list = [];
-  const colors = ['red', 'blue', 'green', 'violet', 'yellow', 'cyan', 'blue', 'gray', 'golden'];
+  const colors = ['red', 'blue', 'green', 'violet', 'yellow', 'cyan', 'blue', 'gray', 'red'];
 
   for (let i = 0; i < players; i++) {
     console.log(i);
@@ -48,22 +48,22 @@ const boardProcess = (width, height, board, players) => {
   const cellspace = Math.round(((w) / (halfplayers - 1)));
   const rowspace = Math.round(((h) / (halfplayers - (halfplayers / 2))));
 
-  console.log(rowspace);
+  // console.log(rowspace);
 
   // si los espacios de filas es mayor que el height pequeño lo reduce
   // if (rowspace >= h) {
   //   rowspace -= 1;
   // }
 
-  console.log(rowspace);
+  // console.log(rowspace);
 
   // creal la lsta de posiciones
   const positions = [];
   const colpositions = colPositions(w, halfplayers, cellspace);
   const rowpositions = rowPositions(h, rowspace);
 
-  console.log(colpositions);
-  console.log(rowpositions);
+  // console.log(colpositions);
+  // console.log(rowpositions);
 
   for (let pos = 0; pos < players.length; pos++) {
     if (pos >= halfplayers) {
@@ -93,11 +93,18 @@ const boardProcess = (width, height, board, players) => {
 //
 
 const setGame = (width, height, board, players) => {
-  const positions = [[1, 1], [1, width - 2], [height - 2, 1], [height - 2, width - 2]];
-
   if (players.length <= 4) {
+    let positions;
+
+    if (players.length === 2) {
+      positions = [[1, 1], [1, 4]]; // [width - 2, height - 2]
+    } else {
+      positions = [[1, 1], [1, height - 2], [width - 2, 1], [width - 2, height - 2]];
+    }
+
     for (let i = 0; i < players.length; i++) {
       const position = positions[i];
+      // console.log(board);
       board[position[0]][position[1]].value = 3;
       board[position[0]][position[1]].player = players[i].id;
       board[position[0]][position[1]].color = players[i].color;

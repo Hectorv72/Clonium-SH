@@ -1,13 +1,16 @@
 // eslint-disable-next-line import/no-absolute-path
-import { addDot, globalAwait } from '/javascript/process.js';
+import { addDot, globalAwait, fichasPlayer } from '/javascript/process.js';
 // eslint-disable-next-line import/no-absolute-path
-import { jugadores } from '/javascript/clone.js';
+import { jugadores, listPlayers } from '/javascript/clone.js';
 
 const tblClonium = document.getElementById('tabla');
 // eslint-disable-next-line no-multi-spaces
-const h1Msj      = document.getElementById('mensaje');
+// const h1Msj      = document.getElementById('mensaje');
+const divPuntos = document.getElementById('puntos');
 
 let globalTurno = 1;
+// h1Msj.innerHTML = 'Turno del jugador ' + globalTurno;
+// const localTurno = 0;
 
 // Renderiza la tabla con los nuevos datos
 function cargarLista (array) {
@@ -16,21 +19,26 @@ function cargarLista (array) {
   array.forEach(row => {
     newBoard += '<tr>';
     row.forEach(column => {
-      const valor = column.value;
       if (column.value === 0) {
-        newBoard += '<td></td>';
+        newBoard += `<td id="td-${column.id}" ></td>`;
       } else {
-        newBoard += `<td><div class="ficha" style="background-color: ${column.color};" >${valor}</div></td>`;
+        newBoard += `<td id="td-${column.id}" ><div class="ficha" style="background-color: ${column.color};" >${column.value}</div></td>`;
       }
     });
     newBoard += '</tr>';
   });
   tblClonium.innerHTML = newBoard;
 
+  // if (localTurno !== globalTurno) {
+  //   localTurno = globalTurno;
+  // }
+  playerMarker(fichasPlayer(array, globalTurno));
+  updatePoints();
+  // puntosPlayer(fichasPlayer(array));
+
   // llama a la funcion que crea sus eventos click
   cellsEvents(tblClonium, array);
-  console.log(globalTurno);
-  h1Msj.innerHTML = 'Turno del jugador ' + globalTurno;
+  // console.log(globalTurno);
 }
 
 // -------------------------------------------------------------
@@ -47,11 +55,6 @@ function cellsEvents (table, array) {
         if (globalAwait === false) {
           if (ficha >= 1) {
             if (globalTurno === player) {
-              globalTurno += 1;
-
-              if (globalTurno > jugadores) {
-                globalTurno = globalTurno % jugadores;
-              }
               addDot(array, i, j);
             }
           }
@@ -61,4 +64,37 @@ function cellsEvents (table, array) {
   }
 }
 
-export { cargarLista, h1Msj };
+// --------------------------------------------------------------------
+
+//
+function playerMarker (array) {
+  if (array.length > 0) {
+    listPlayers[globalTurno - 1].fichas = array.length;
+    array.forEach(element => { document.getElementById(`td-${element.id}`).style = 'background-color: yellow;'; });
+  } else {
+    nextTurn();
+    playerMarker(array);
+  }
+  //
+}
+
+// --------------------------------------------------------------
+
+function nextTurn () {
+  globalTurno += 1;
+
+  if (globalTurno > jugadores) {
+    globalTurno = globalTurno % jugadores;
+  }
+  // h1Msj.innerHTML = 'Turno del jugador ' + globalTurno;
+}
+
+// ------------------------------------------------------------------------------
+
+function updatePoints () {
+  let pointsHtml = '';
+  listPlayers.forEach(element => { pointsHtml += `<div class="ficha" style="background-color: ${element.color}"><strong style="color:white">${element.puntos}</strong></div>`; });
+  divPuntos.innerHTML = pointsHtml;
+}
+
+export { cargarLista, playerMarker, nextTurn, globalTurno };

@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-absolute-path
-import { filas, columnas } from '/javascript/clone.js';
+import { filas, columnas, listPlayers } from '/javascript/clone.js';
 // eslint-disable-next-line import/no-absolute-path
-import { cargarLista, h1Msj } from '/javascript/table.js';
+import { cargarLista, nextTurn, globalTurno } from '/javascript/table.js';
 
 // -------------------------------------------------------------
 
@@ -25,12 +25,16 @@ function verifExpansion (array, rows, cols) {
   if (list.length > 0) {
     globalAwait = true;
     list.forEach(element => expandir(array, element[0], element[1], rows, cols));
+    puntosPlayer(array);
     setTimeout(() => { verifExpansion(array, filas, columnas); }, 500);
   } else {
     globalAwait = false;
+    nextTurn();
+    // playerMarker(array);
     // h1Msj.innerHTML = '';
     // globalAwait = false;
   }
+  cargarLista(array);
 }
 
 //
@@ -40,7 +44,7 @@ function verifExpansion (array, rows, cols) {
 //
 
 // Agrega un punto a las fichas de alrededores
-function expandir (array, posrow, poscol, cols, rows) {
+function expandir (array, posrow, poscol, rows, cols) {
   const ficha = array[posrow][poscol].value;
   const color = array[posrow][poscol].color;
   const player = array[posrow][poscol].player;
@@ -82,7 +86,7 @@ function expandir (array, posrow, poscol, cols, rows) {
   }
 
   // actualiza la tabla html de fichas (board)
-  cargarLista(array);
+  // cargarLista(array);
 }
 
 // -------------------------------------------------------------------------
@@ -92,17 +96,42 @@ function addDot (array, posrow, poscol) {
   array[posrow][poscol].value += 1;
   const ficha = array[posrow][poscol].value;
 
-  h1Msj.innerHTML = 'Await...';
+  // h1Msj.innerHTML = 'Await...';
 
   if (ficha >= 4) {
     setTimeout(() => { verifExpansion(array, filas, columnas); }, 300);
   } else {
     globalAwait = false;
+    puntosPlayer(array);
+    nextTurn();
+    cargarLista(array);
     // h1Msj.innerHTML = '';
   }
-  cargarLista(array);
 };
 
 // ------------------------------------------------------------------------------
 
-export { addDot, globalAwait };
+function fichasPlayer (array, player) {
+  const newvector = [];
+  array.forEach(element => element.forEach(value => { if (value.player === player) { newvector.push(value); } }));
+
+  // const probando = array.filter(element => (element.filter(value => value.player === globalTurno).length !== 0)).map(element => element.filter(value => value.value !== 0));
+  //
+  return newvector;
+}
+
+function puntosPlayer (array) {
+  // console.log(array);
+  listPlayers.forEach(player => {
+    let puntos = 0;
+    fichasPlayer(array, player.id).forEach(element => { puntos += element.value; });
+
+    listPlayers[player.id - 1].puntos = puntos;
+  });
+
+  // console.log(fichas);
+}
+
+// ----------------------------------------------------------------
+
+export { addDot, globalAwait, fichasPlayer };

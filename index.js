@@ -27,9 +27,12 @@ app.get('/', (req, res) => {
 
 // }
 
-app.get('/board', (req, res) => {
-  const gameboard = gameBoard(8, 8, 2);
-  res.send(JSON.stringify({ rows: 8, cols: 8, board: gameboard, jugadores: 2 })); //
+// app.post('/board'){}
+
+app.post('/board', (req, res) => {
+  const datos = req.body;
+  const gameboard = gameBoard(datos.rows, datos.cols, datos.players.length);
+  res.send(JSON.stringify({ rows: datos.rows, cols: datos.cols, jugadores: datos.players.length, board: gameboard })); //
 });
 
 //
