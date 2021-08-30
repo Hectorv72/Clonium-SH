@@ -13,7 +13,7 @@ const listPlayers = [{ id: 1, color: 'red', name: 'Hector', chips: 1, dots: 3 },
 
 const startGame = async () => {
 
-  const response = await fetch('/board', {
+  const response = await fetch('/clonium/board', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

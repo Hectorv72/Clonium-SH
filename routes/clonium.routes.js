@@ -5,8 +5,8 @@ const router        = express.Router();
 const { gameBoard } = require('../modules/clonium.module');
 
 router.get('/', (req, res) => {
-  res.send('probando');
-  // res.render('page/index');
+  // res.send('probando');
+  res.render('page/index');
 });
 
 router.post('/board', (req, res) => {

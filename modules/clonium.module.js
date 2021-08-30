@@ -29,7 +29,7 @@ const setPlayers = (players) => {
   const colors = ['red', 'blue', 'green', 'violet', 'yellow', 'cyan', 'blue', 'gray', 'red'];
 
   for (let i = 0; i < players; i++) {
-    console.log(i);
+
     list.push({ id: i + 1, turno: i + 1, color: colors[i] });
   }
 
@@ -115,4 +115,4 @@ const gameBoard = (width = 8, height = 8, player = 2) => {
   return game;
 };
 
-module.exports = gameBoard;
+module.exports = { gameBoard };

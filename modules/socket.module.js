@@ -2,9 +2,8 @@
 /* eslint-disable no-multi-spaces */
 const socketIO = require('socket.io');
 const http     = require('http');
-const port     = 4040;
 
-const SocketConnect = (app) => {
+const SocketConnect = (app, port) => {
 
   const server = http.createServer(app);
   // const server = http.Server(app);

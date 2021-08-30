@@ -10,7 +10,7 @@
 // eslint-disable-next-line import/no-absolute-path
 // import io from '/javascript/socket.io/socket.io.min.js';
 // eslint-disable-next-line no-undef
-const socket = io.connect('http://localhost:4040', { forceNew: true });
+const socket = io.connect('http://localhost:4000', { forceNew: true });
 
 socket.on('messages', function (data) {
   render(data);

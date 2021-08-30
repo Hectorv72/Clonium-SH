@@ -22,7 +22,7 @@ app.use(middlewares);
 // console.log(routes);
 app.use('/clonium', require('./routes/clonium.routes'));
 
-app.listen(port, () => console.log('Example app listening on port port!'));
+// app.listen(port, () => console.log('Example app listening on port port!'));
 
 // Socket
-SocketConnect(app);
+SocketConnect(app, port);
