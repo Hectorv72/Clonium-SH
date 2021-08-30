@@ -1,5 +1,10 @@
-const { colPositions, rowPositions } = require('./positions');
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable padded-blocks */
+/* eslint-disable no-multi-spaces */
+const { colPositions, rowPositions } = require('../components/clonium/positions');
 
+
+// Crea la mesa de juego vacia con el largo y el ancho
 const setBoard = (width, height) => {
   const rows = [];
 
@@ -17,10 +22,8 @@ const setBoard = (width, height) => {
   return rows;
 };
 
-// //=>
 
-//
-
+// => Crea la lista de jugadores (Temporal)
 const setPlayers = (players) => {
   const list = [];
   const colors = ['red', 'blue', 'green', 'violet', 'yellow', 'cyan', 'blue', 'gray', 'red'];
@@ -33,10 +36,8 @@ const setPlayers = (players) => {
   return list;
 };
 
-// //=>
 
-//
-
+// => Proceso de creacion dinamica de posiciones de jugadores (Temporal)
 const boardProcess = (width, height, board, players) => {
   const w = (width - 2);
   const h = (height - 2);
@@ -48,27 +49,15 @@ const boardProcess = (width, height, board, players) => {
   const cellspace = Math.round(((w) / (halfplayers - 1)));
   const rowspace = Math.round(((h) / (halfplayers - (halfplayers / 2))));
 
-  // console.log(rowspace);
-
-  // si los espacios de filas es mayor que el height pequeño lo reduce
-  // if (rowspace >= h) {
-  //   rowspace -= 1;
-  // }
-
-  // console.log(rowspace);
-
-  // creal la lsta de posiciones
+  // crea las listas de posiciones
   const positions = [];
   const colpositions = colPositions(w, halfplayers, cellspace);
   const rowpositions = rowPositions(h, rowspace);
 
-  // console.log(colpositions);
-  // console.log(rowpositions);
-
+  // Agrega a la lista las posiciones
   for (let pos = 0; pos < players.length; pos++) {
     if (pos >= halfplayers) {
       if (pos === players.length - 1) {
-        console.log(colpositions.length - 1);
         positions.push([rowpositions[1], colpositions[colpositions.length - 1]]);
       } else {
         positions.push([rowpositions[1], colpositions[pos - halfplayers]]);
@@ -78,6 +67,7 @@ const boardProcess = (width, height, board, players) => {
     }
   }
 
+  // Coloca las fichas de cada jugador en la posición correspondiente
   for (let i = 0; i < players.length; i++) {
     const position = positions[i];
     board[position[0]][position[1]].value = 3;
@@ -88,10 +78,8 @@ const boardProcess = (width, height, board, players) => {
   return board;
 };
 
-// //=>
 
-//
-
+// Crea las posiciones de las fichas en la mesa de juego
 const setGame = (width, height, board, players) => {
   if (players.length <= 4) {
     let positions;
@@ -102,9 +90,10 @@ const setGame = (width, height, board, players) => {
       positions = [[1, 1], [1, height - 2], [width - 2, 1], [width - 2, height - 2]];
     }
 
+    // Coloca las fichas de cada jugador en la posición correspondiente
     for (let i = 0; i < players.length; i++) {
       const position = positions[i];
-      // console.log(board);
+
       board[position[0]][position[1]].value = 3;
       board[position[0]][position[1]].player = players[i].id;
       board[position[0]][position[1]].color = players[i].color;
@@ -116,10 +105,8 @@ const setGame = (width, height, board, players) => {
   return board;
 };
 
-// //=>
 
-//
-
+// Llama a los eventos de creacion del juego
 const gameBoard = (width = 8, height = 8, player = 2) => {
   const board = setBoard(width, height);
   const players = setPlayers(player);
@@ -128,6 +115,4 @@ const gameBoard = (width = 8, height = 8, player = 2) => {
   return game;
 };
 
-module.exports = {
-  gameBoard
-};
+module.exports = gameBoard;

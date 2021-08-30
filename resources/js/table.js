@@ -1,22 +1,21 @@
-// eslint-disable-next-line import/no-absolute-path
-import { addDot, globalAwait, fichasPlayer } from '/javascript/process.js';
-// eslint-disable-next-line import/no-absolute-path
-import { jugadores, listPlayers } from '/javascript/clone.js';
+/* eslint-disable padded-blocks */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable import/no-absolute-path */
+import { addDot, globalAwait, getPlayerChips } from '/javascript/chips.js';
+import { countPlayers, listPlayers }           from '/javascript/board.js';
 
 const tblClonium = document.getElementById('tabla');
-// eslint-disable-next-line no-multi-spaces
-// const h1Msj      = document.getElementById('mensaje');
-const divPuntos = document.getElementById('puntos');
+const divPoints  = document.getElementById('puntos');
 
-let globalTurno = 1;
-// h1Msj.innerHTML = 'Turno del jugador ' + globalTurno;
-// const localTurno = 0;
+let globalTurn = 1;
 
 // Renderiza la tabla con los nuevos datos
-function cargarLista (array) {
+function renderList (array) {
+
   let newBoard = '';
 
   array.forEach(row => {
+
     newBoard += '<tr>';
     row.forEach(column => {
       if (column.value === 0) {
@@ -27,34 +26,29 @@ function cargarLista (array) {
     });
     newBoard += '</tr>';
   });
+
   tblClonium.innerHTML = newBoard;
 
-  // if (localTurno !== globalTurno) {
-  //   localTurno = globalTurno;
-  // }
-  playerMarker(fichasPlayer(array, globalTurno));
-  updatePoints();
-  // puntosPlayer(fichasPlayer(array));
+  playerMarker(array, globalTurn);
+  renderTotalPlayerDots(listPlayers);
 
   // llama a la funcion que crea sus eventos click
-  cellsEvents(tblClonium, array);
-  // console.log(globalTurno);
+  cellsAddDotEvent(tblClonium, array);
 }
 
 // -------------------------------------------------------------
 
-// Agrega el evento de agregar punto a los td
-function cellsEvents (table, array) {
+// Agrega el evento de agregar punto a las celdas con fichas
+function cellsAddDotEvent (table, array) {
   for (let i = 0; i < table.rows.length; i++) {
     for (let j = 0; j < table.rows[i].cells.length; j++) {
       table.rows[i].cells[j].addEventListener('click', () => {
-        // console.log('click' + ' ' + i + ' ' + j);
-        const ficha = array[i][j].value;
-        const player = array[i][j].player;
+        const chip = array[i][j];
+        const player = chip.player;
 
-        if (globalAwait === false) {
-          if (ficha >= 1) {
-            if (globalTurno === player) {
+        if (chip.value >= 1) {
+          if (globalAwait === false) {
+            if (globalTurn === player) {
               addDot(array, i, j);
             }
           }
@@ -67,34 +61,34 @@ function cellsEvents (table, array) {
 // --------------------------------------------------------------------
 
 //
-function playerMarker (array) {
-  if (array.length > 0) {
-    listPlayers[globalTurno - 1].fichas = array.length;
-    array.forEach(element => { document.getElementById(`td-${element.id}`).style = 'background-color: yellow;'; });
+function playerMarker (array, player) {
+  const arrayPlayerChips = getPlayerChips(array, player);
+
+  if (arrayPlayerChips.length > 0) {
+    listPlayers[globalTurn - 1].chips = arrayPlayerChips.length;
+    arrayPlayerChips.forEach(element => { document.getElementById(`td-${element.id}`).style = 'background-color: yellow;'; });
   } else {
     nextTurn();
-    playerMarker(array);
+    playerMarker(arrayPlayerChips);
   }
-  //
 }
 
 // --------------------------------------------------------------
 
 function nextTurn () {
-  globalTurno += 1;
+  globalTurn += 1;
 
-  if (globalTurno > jugadores) {
-    globalTurno = globalTurno % jugadores;
+  if (globalTurn > countPlayers) {
+    globalTurn = globalTurn % countPlayers;
   }
-  // h1Msj.innerHTML = 'Turno del jugador ' + globalTurno;
 }
 
 // ------------------------------------------------------------------------------
 
-function updatePoints () {
-  let pointsHtml = '';
-  listPlayers.forEach(element => { pointsHtml += `<div class="ficha" style="background-color: ${element.color}"><strong style="color:white">${element.puntos}</strong></div>`; });
-  divPuntos.innerHTML = pointsHtml;
+function renderTotalPlayerDots (list) {
+  let totalDotsHtml = '';
+  list.forEach(element => { totalDotsHtml += `<div class="ficha" style="background-color: ${element.color}"><strong style="color:white">${element.dots}</strong></div>`; });
+  divPoints.innerHTML = totalDotsHtml;
 }
 
-export { cargarLista, playerMarker, nextTurn, globalTurno };
+export { renderList, playerMarker, nextTurn, globalTurn };

@@ -1,8 +1,9 @@
+/* eslint-disable padded-blocks */
+/* eslint-disable no-multi-spaces */
 const partials = require('express-partials');
-const session = require('express-session');
-const express = require('express');
-
-const oneDay = 1000 * 60 * 60 * 24;
+const session  = require('express-session');
+const express  = require('express');
+const oneDay   = 1000 * 60 * 60 * 24;
 
 const pack = [
   express.urlencoded({ extended: false }),

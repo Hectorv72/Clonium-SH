@@ -1,16 +1,16 @@
-const express = require('express');
-const path = require('path');
-const middlewares = require('./modules/middlewares');
-const socketIO = require('socket.io');
-const http = require('http');
-const { gameBoard } = require('./modules/components');
+/* eslint-disable padded-blocks */
+/* eslint-disable no-multi-spaces */
+
+const express           = require('express');
+const path              = require('path');
+const middlewares       = require('./modules/middlewares.module');
+const routes            = require('./routes/clonium.routes');
+const { SocketConnect } = require('./modules/socket.module');
+
+const app           = express();
+const port          = process.env.PORT || 4000;
 // const routes = require('./routes/routes'); app.use(routes); rutas = require('express').Router
 // const morgan = require('morgan');
-
-// const { randomPokemon, verifResponse } = require('./modules/functions');
-
-const app = express();
-const port = process.env.PORT || 4000;
 
 // View engine setup
 app.set('view engine', 'ejs');
@@ -18,51 +18,11 @@ app.set('port', port);
 
 app.use('/javascript', express.static(path.join(__dirname, '/resources/js')));
 app.use(middlewares);
-
-app.get('/', (req, res) => {
-  res.render('page/index');
-});
-
-// app.post('/board'){
-
-// }
-
-// app.post('/board'){}
-
-app.post('/board', (req, res) => {
-  const datos = req.body;
-  const gameboard = gameBoard(datos.rows, datos.cols, datos.players.length);
-  res.send(JSON.stringify({ rows: datos.rows, cols: datos.cols, jugadores: datos.players.length, board: gameboard })); //
-});
-
-//
-
-//
-
-// Socket
+// console.log('espaciado buenardo');
+// console.log(routes);
+app.use('/clonium', routes);
 
 app.listen(port, () => console.log('Example app listening on port port!'));
 
-const server = http.createServer(app);
-
-const io = socketIO(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['my-custom-header'],
-    credentials: true
-  }
-});
-
-io.on('connection', (socket) => {
-  console.log('conectado');
-  socket.on('mensaje', (laik, id) => {
-    io.emit(id, laik);
-  });
-});
-
-// server.listen(3000, () => {
-//   console.log('funca');
-// });
-
-// app.get('port')
+// Socket
+SocketConnect(app);
