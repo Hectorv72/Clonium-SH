@@ -62,4 +62,4 @@ const SocketConnect = (app) => {
   // app.get('port')
 };
 
-module.exports = SocketConnect;
+module.exports = { SocketConnect };

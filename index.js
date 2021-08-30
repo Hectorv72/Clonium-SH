@@ -4,7 +4,7 @@
 const express           = require('express');
 const path              = require('path');
 const middlewares       = require('./modules/middlewares.module');
-const routes            = require('./routes/clonium.routes');
+// const routes            =
 const { SocketConnect } = require('./modules/socket.module');
 
 const app           = express();
@@ -20,7 +20,7 @@ app.use('/javascript', express.static(path.join(__dirname, '/resources/js')));
 app.use(middlewares);
 // console.log('espaciado buenardo');
 // console.log(routes);
-app.use('/clonium', routes);
+app.use('/clonium', require('./routes/clonium.routes'));
 
 app.listen(port, () => console.log('Example app listening on port port!'));
 

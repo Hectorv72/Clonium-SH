@@ -17,4 +17,4 @@ router.post('/board', (req, res) => {
 
 // console.log(router);
 
-module.export = router;
+module.exports = router;
