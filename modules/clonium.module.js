@@ -1,118 +1,77 @@
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable padded-blocks */
 /* eslint-disable no-multi-spaces */
-const { colPositions, rowPositions } = require('../components/clonium/positions');
+const { setGame, setBoard, setPlayers } = require('../components/clonium/gameboard.component');
+const fs = require('fs');
 
-
-// Crea la mesa de juego vacia con el largo y el ancho
-const setBoard = (width, height) => {
-  const rows = [];
-
-  for (let row = 0; row < width; row++) {
-    const cols = [];
-
-    for (let col = 0; col < height; col++) {
-      const itemID = (col + 1) + (height * row);
-      cols.push({ id: itemID, value: 0, player: null, color: '' });
-    }
-
-    rows.push(cols);
-  }
-
-  return rows;
-};
-
-
-// => Crea la lista de jugadores (Temporal)
-const setPlayers = (players) => {
-  const list = [];
-  const colors = ['red', 'blue', 'green', 'violet', 'yellow', 'cyan', 'blue', 'gray', 'red'];
-
-  for (let i = 0; i < players; i++) {
-
-    list.push({ id: i + 1, turno: i + 1, color: colors[i] });
-  }
-
-  return list;
-};
-
-
-// => Proceso de creacion dinamica de posiciones de jugadores (Temporal)
-const boardProcess = (width, height, board, players) => {
-  const w = (width - 2);
-  const h = (height - 2);
-
-  // La mitad de los jugadores
-  const halfplayers = Math.round(players.length / 2);
-
-  // Cantidad de celdas de espacio entre las fichas
-  const cellspace = Math.round(((w) / (halfplayers - 1)));
-  const rowspace = Math.round(((h) / (halfplayers - (halfplayers / 2))));
-
-  // crea las listas de posiciones
-  const positions = [];
-  const colpositions = colPositions(w, halfplayers, cellspace);
-  const rowpositions = rowPositions(h, rowspace);
-
-  // Agrega a la lista las posiciones
-  for (let pos = 0; pos < players.length; pos++) {
-    if (pos >= halfplayers) {
-      if (pos === players.length - 1) {
-        positions.push([rowpositions[1], colpositions[colpositions.length - 1]]);
-      } else {
-        positions.push([rowpositions[1], colpositions[pos - halfplayers]]);
-      }
-    } else {
-      positions.push([rowpositions[0], colpositions[pos]]);
-    }
-  }
-
-  // Coloca las fichas de cada jugador en la posición correspondiente
-  for (let i = 0; i < players.length; i++) {
-    const position = positions[i];
-    board[position[0]][position[1]].value = 3;
-    board[position[0]][position[1]].player = players[i].id;
-    board[position[0]][position[1]].color = players[i].color;
-  }
-
-  return board;
-};
-
-
-// Crea las posiciones de las fichas en la mesa de juego
-const setGame = (width, height, board, players) => {
-  if (players.length <= 4) {
-    let positions;
-
-    if (players.length === 2) {
-      positions = [[1, 1], [1, 4]]; // [width - 2, height - 2]
-    } else {
-      positions = [[1, 1], [1, height - 2], [width - 2, 1], [width - 2, height - 2]];
-    }
-
-    // Coloca las fichas de cada jugador en la posición correspondiente
-    for (let i = 0; i < players.length; i++) {
-      const position = positions[i];
-
-      board[position[0]][position[1]].value = 3;
-      board[position[0]][position[1]].player = players[i].id;
-      board[position[0]][position[1]].color = players[i].color;
-    }
+const getBoards = () => {
+  const boards = fs.readFileSync('./resources/json/board.json');
+  console.log();
+  if (boards.toString() === '') {
+    return [];
   } else {
-    board = boardProcess(width, height, board, players);
+    const json = JSON.parse(boards);
+    return json;
   }
-
-  return board;
 };
 
+const writeJsonFile = (string) => {
+  fs.writeFile('./resources/json/board.json', string, (err) => {
+    if (err) throw err;
+    console.log('Archivo creado');
+  });
+};
 
-// Llama a los eventos de creacion del juego
-const gameBoard = (width = 8, height = 8, player = 2) => {
-  const board = setBoard(width, height);
-  const players = setPlayers(player);
-  const game = setGame(width, height, board, players);
+const updateBoard = (room, turn, board) => {
+  const boards = getBoards();
+  if (boards !== undefined) {
+    const newboard = boards.find(element => element.room === room);
+    if (newboard !== undefined) {
+      newboard.board = board;
+      newboard.turn = turn;
+      writeJsonFile(JSON.stringify(boards));
+    }
+  }
+};
 
+const saveBoard = (room, player, board) => {
+  const list = getBoards();
+  const game = {
+    room: room,
+    players: player,
+    turn: 1,
+    board: board
+  };
+
+  list.push(game);
+  writeJsonFile(JSON.stringify(list));
   return game;
 };
 
-module.exports = { gameBoard };
+const getBoard = (room) => {
+  const boards = getBoards();
+  if (boards.length !== 0) {
+    const board = boards.find(element => element.room === room);
+    return board;
+  } else {
+    return undefined;
+  }
+};
+
+// Llama a los eventos de creacion del juego
+const gameBoard = (room, width = 8, height = 8, player = 2) => {
+  const prevBoard = getBoard(room);
+  let mesa;
+  if (prevBoard === undefined) {
+    const board = setBoard(width, height);
+    const players = setPlayers(player);
+    const game = setGame(width, height, board, players);
+    saveBoard(room, player, game);
+    mesa = { turn: 1, board: game };
+  } else {
+    mesa = { turn: prevBoard.turn, board: prevBoard.board };
+  }
+  return mesa;
+};
+
+module.exports = { gameBoard, getBoard, updateBoard };

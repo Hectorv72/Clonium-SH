@@ -1,19 +1,37 @@
 /* eslint-disable padded-blocks */
 /* eslint-disable no-multi-spaces */
 // eslint-disable-next-line import/no-absolute-path
-import { renderList } from '/javascript/table.js';
+import { renderList, updateTurn } from '/javascript/socketgame.js';
+// eslint-disable-next-line import/no-absolute-path
+import { joinRoom } from '/javascript/socket.js';
 
 // --------------------------------------------------
 // http://192.168.80.246:5000/
 let arrayGame = [];
 let gameRows  = 8;
 let gameCols  = 8;
+let roomKey   = '';
 let countPlayers;
-const listPlayers = [{ id: 1, color: 'red', name: 'Hector', chips: 1, dots: 3 }, { id: 2, color: 'blue', name: 'Juan', chips: 1, dots: 3 }];
+const path = location.pathname.split('/');
+const room = path[path.length - 1];
+
+const listPlayers = [{ id: 1, color: 'red', name: 'Hector', chips: 1, dots: 3 }, { id: 2, color: 'blue', name: 'Juan', chips: 1, dots: 3 }]; // , { id: 3, color: 'green', name: 'Juan', chips: 1, dots: 3 }
+
+const updateBoard = (data) => {
+  arrayGame = data;
+};
+
+const setBoard = (data) => {
+
+  updateBoard(data);
+  // console.log(data);
+  renderList(arrayGame);
+  return arrayGame;
+};
 
 const startGame = async () => {
 
-  const response = await fetch('/clonium/board', {
+  const response = await fetch(`/clonium/${room}/board`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -25,14 +43,17 @@ const startGame = async () => {
 
   const json = await response.json();
 
-  arrayGame    = json.board;
+  // console.log(json);
+  updateTurn(json.turn);
+  // console.log(json.turn);
+  setBoard(json.board);
   gameRows     = json.rows;
   gameCols     = json.cols;
   countPlayers = json.players;
-
-  renderList(arrayGame);
+  roomKey      = json.room;
+  joinRoom(json.room);
 };
 
 startGame();
 
-export { gameRows, gameCols, countPlayers, listPlayers };
+export { arrayGame, roomKey, setBoard, updateBoard,  gameRows, gameCols, countPlayers, listPlayers };

@@ -1,7 +1,8 @@
 /* eslint-disable padded-blocks */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable import/no-absolute-path */
-import { addDot, globalAwait, getPlayerChips } from '/javascript/chips.js';
+import { sendAddDotPosition }                  from '/javascript/socket.js';
+import { globalAwait, getPlayerChips }         from '/javascript/chips.js'; // addDot
 import { countPlayers, listPlayers }           from '/javascript/board.js';
 
 const tblClonium = document.getElementById('tabla');
@@ -49,7 +50,9 @@ function cellsAddDotEvent (table, array) {
         if (chip.value >= 1) {
           if (globalAwait === false) {
             if (globalTurn === player) {
-              addDot(array, i, j);
+
+              // addDot(array, i, j);
+              sendAddDotPosition(i, j);
             }
           }
         }
@@ -67,10 +70,11 @@ function playerMarker (array, player) {
   if (arrayPlayerChips.length > 0) {
     listPlayers[globalTurn - 1].chips = arrayPlayerChips.length;
     arrayPlayerChips.forEach(element => { document.getElementById(`td-${element.id}`).style = 'background-color: yellow;'; });
-  } else {
-    nextTurn();
-    playerMarker(arrayPlayerChips);
   }
+  //  else {
+  //   nextTurn();
+  //   playerMarker(arrayPlayerChips);
+  // }
 }
 
 // --------------------------------------------------------------
