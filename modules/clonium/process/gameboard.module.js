@@ -1,4 +1,4 @@
-const { colPositions, rowPositions } = require('./positions');
+const { colPositions, rowPositions } = require('./gamepositions.module');
 
 // Crea la mesa de juego vacia con el largo y el ancho
 const setBoard = (width, height) => {

@@ -20,6 +20,7 @@ app.use('/javascript', express.static(path.join(__dirname, '/resources/js')));
 app.use(middlewares);
 // console.log('espaciado buenardo');
 // console.log(routes);
+app.get('/', (req, res) => { res.redirect('/clonium/game'); });
 app.use('/clonium', require('./routes/clonium.routes'));
 
 // app.listen(port, () => console.log('Example app listening on port port!'));

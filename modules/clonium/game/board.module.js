@@ -1,7 +1,3 @@
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable padded-blocks */
-/* eslint-disable no-multi-spaces */
-const { setGame, setBoard, setPlayers } = require('../components/clonium/gameboard.component');
 const fs = require('fs');
 
 const getBoards = () => {
@@ -58,20 +54,4 @@ const getBoard = (room) => {
   }
 };
 
-// Llama a los eventos de creacion del juego
-const gameBoard = (room, width = 8, height = 8, player = 2) => {
-  const prevBoard = getBoard(room);
-  let mesa;
-  if (prevBoard === undefined) {
-    const board = setBoard(width, height);
-    const players = setPlayers(player);
-    const game = setGame(width, height, board, players);
-    saveBoard(room, player, game);
-    mesa = { turn: 1, board: game };
-  } else {
-    mesa = { turn: prevBoard.turn, board: prevBoard.board };
-  }
-  return mesa;
-};
-
-module.exports = { gameBoard, getBoard, updateBoard };
+module.exports = { getBoard, updateBoard, saveBoard };

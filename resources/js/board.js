@@ -15,7 +15,7 @@ let countPlayers;
 const path = location.pathname.split('/');
 const room = path[path.length - 1];
 
-const listPlayers = [{ id: 1, color: 'red', name: 'Hector', chips: 1, dots: 3 }, { id: 2, color: 'blue', name: 'Juan', chips: 1, dots: 3 }]; // , { id: 3, color: 'green', name: 'Juan', chips: 1, dots: 3 }
+const listPlayers = [{ id: 1, color: 'red', name: 'Hector' }, { id: 2, color: 'blue', name: 'Juan' }];
 
 const updateBoard = (data) => {
   arrayGame = data;
@@ -24,7 +24,6 @@ const updateBoard = (data) => {
 const setBoard = (data) => {
 
   updateBoard(data);
-  // console.log(data);
   renderList(arrayGame);
   return arrayGame;
 };
@@ -43,9 +42,7 @@ const startGame = async () => {
 
   const json = await response.json();
 
-  // console.log(json);
   updateTurn(json.turn);
-  // console.log(json.turn);
   setBoard(json.board);
   gameRows     = json.rows;
   gameCols     = json.cols;
