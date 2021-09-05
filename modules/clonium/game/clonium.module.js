@@ -72,33 +72,38 @@ function getGameBoard (io, data) {
   // console.log('----------------------------');
   // console.log(globalBoard);
   // console.log('----------------------------');
+  if (globalBoard.board !== undefined) {
 
-  if (JSON.stringify(globalBoard.board) === JSON.stringify(sendedBoard)) {
+    if (JSON.stringify(globalBoard.board) === JSON.stringify(sendedBoard)) {
 
-    const newBoard = chipSelect(JSON.parse(JSON.stringify(sendedBoard)), data.col, data.row);
-    const processList = getProcess(newBoard.process);
+      const newBoard = chipSelect(JSON.parse(JSON.stringify(sendedBoard)), data.col, data.row);
+      const processList = getProcess(newBoard.process);
 
-    // Cambia el turno del jugador
-    // console.log(globalBoard.turn);
-    let turno = (globalBoard.turn + 1);
-    if (turno > globalBoard.players) {
-      turno = turno - globalBoard.players;
+      // Cambia el turno del jugador
+      // console.log(globalBoard.turn);
+      let turno = (globalBoard.turn + 1);
+      if (turno > globalBoard.players) {
+        turno = turno - globalBoard.players;
+      }
+
+      const response = { turn: turno, row: data.row, col: data.col, board: newBoard.board, process: processList }; // board: originalBoard
+      updateBoard(data.room, turno, newBoard.board);
+      return response;
+      // => io.sockets.in(data.room).emit('add-dot-receiver', response);
+
+      // console.log('enviado iguales');
+      // cooldownClick = false;
+    } else {
+
+      const response = { turn: data.turn, row: data.row, col: data.col, board: data.board, process: [] };
+      return response;
+      // => io.sockets.in(data.room).emit('add-dot-receiver', response);
+      // console.log('enviado diferentes');
+      // cooldownClick = false;
     }
-
-    const response = { turn: turno, row: data.row, col: data.col, board: newBoard.board, process: processList }; // board: originalBoard
-    updateBoard(data.room, turno, newBoard.board);
-    return response;
-    // => io.sockets.in(data.room).emit('add-dot-receiver', response);
-
-    // console.log('enviado iguales');
-    // cooldownClick = false;
   } else {
-
-    const response = { turn: globalBoard.turn, row: data.row, col: data.col, board: globalBoard.board, process: [] };
+    const response = { turn: data.turn, row: data.row, col: data.col, board: globalBoard.board, process: [] };
     return response;
-    // => io.sockets.in(data.room).emit('add-dot-receiver', response);
-    // console.log('enviado diferentes');
-    // cooldownClick = false;
 
   }
   // } else {

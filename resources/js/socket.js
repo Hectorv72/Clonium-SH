@@ -1,6 +1,6 @@
 /* eslint-disable import/no-absolute-path */
 import { arrayGame, roomKey, updateBoard, setBoard } from '/javascript/board.js';
-import { renderProcess, updateTurn } from '/javascript/socketgame.js';
+import { renderProcess, globalTurn, updateTurn } from '/javascript/socketgame.js';
 // eslint-disable-next-line no-undef
 const socket = io.connect(`http://${location.host}`, { forceNew: true });
 
@@ -13,7 +13,7 @@ function setAwait (bol) {
 
 // Emite el mensaje al servidor sobre la ficha presionada
 function sendAddDotPosition (col, row) {
-  socket.emit('add-dot-emitter', { room: roomKey, board: arrayGame, col: col, row: row });
+  socket.emit('add-dot-emitter', { room: roomKey, turn: globalTurn, board: arrayGame, col: col, row: row });
   setAwait(true);
 };
 

@@ -39,9 +39,11 @@ const boardProcess = (width, height, board, players) => {
   const halfplayers = Math.round(players.length / 2);
 
   // Cantidad de celdas de espacio entre las fichas
-  const cellspace = Math.round(((w) / (halfplayers - 1)));
-  const rowspace = Math.round(((h) / (halfplayers - (halfplayers / 2))));
+  const cellspace = Math.trunc(((w) / (halfplayers - 1)));
+  const rowspace = Math.round(((h) / (halfplayers - Math.trunc(halfplayers / 2))));
 
+  console.log(rowspace);
+  console.log(cellspace);
   // crea las listas de posiciones
   const positions = [];
   const colpositions = colPositions(w, halfplayers, cellspace);

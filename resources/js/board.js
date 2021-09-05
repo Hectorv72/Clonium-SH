@@ -8,14 +8,15 @@ import { joinRoom } from '/javascript/socket.js';
 // --------------------------------------------------
 // http://192.168.80.246:5000/
 let arrayGame = [];
-let gameRows  = 8;
-let gameCols  = 8;
+let gameRows  = 9;
+let gameCols  = 9;
 let roomKey   = '';
 let countPlayers;
 const path = location.pathname.split('/');
 const room = path[path.length - 1];
 
 const listPlayers = [{ id: 1, color: 'red', name: 'Hector' }, { id: 2, color: 'blue', name: 'Juan' }];
+// , { id: 2, color: 'blue', name: 'Juan' }, { id: 1, color: 'red', name: 'Hector' }, { id: 2, color: 'blue', name: 'Juan' }, { id: 2, color: 'blue', name: 'Juan' }
 
 const updateBoard = (data) => {
   arrayGame = data;
