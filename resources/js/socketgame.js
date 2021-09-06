@@ -13,7 +13,7 @@ function updateTurn (turn) {
 }
 
 // Renderiza en bruto la tabla con los datos de una lista
-function renderList (array) {
+async function renderList (array) {
 
   let newBoard = '';
 
@@ -31,11 +31,12 @@ function renderList (array) {
   });
 
   tblClonium.innerHTML = newBoard;
+  // console.log(array);
 
   playerMarker(array, globalTurn);
-
   // llama a la funcion que crea sus eventos click
   cellsAddDotEvent(tblClonium, array);
+
 }
 
 // -------------------------------------------------------------

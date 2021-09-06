@@ -2,7 +2,7 @@
 /* eslint-disable no-multi-spaces */
 const express       = require('express');
 const router        = express.Router();
-const { createGameBoard } = require('../modules/clonium/game/clonium.module');
+const { getOrCreateGameBoard } = require('../modules/clonium/game/clonium.module');
 const { getBoard } = require('../modules/clonium/game/board.module');
 
 router.get('/game', (req, res) => {
@@ -17,16 +17,19 @@ router.get('/game/:room', (req, res) => {
 
 router.post('/:room/board', (req, res) => {
   const datos = req.body;
-  const gameboard = createGameBoard(req.params.room, datos.rows, datos.cols, datos.players.length);
-  res.send(JSON.stringify({ room: req.params.room, turn: gameboard.turn, rows: datos.rows, cols: datos.cols, players: datos.players.length, board: gameboard.board })); //
+  const room  = req.params.room;
+  const board = getOrCreateGameBoard(room, datos);
+  // console.log(board);
+  return res.send(JSON.stringify(board));
 });
 
 router.get('/:room/board', (req, res) => {
   const board = getBoard(req.params.room);
+  // console.log(board);
   if (board !== undefined) {
-    res.send(JSON.stringify({ message: false }));
+    res.send(JSON.stringify({ exists: true, game: board }));
   } else {
-    res.send(JSON.stringify({ message: true }));
+    res.send(JSON.stringify({ exists: false }));
   }
 });
 

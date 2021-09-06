@@ -42,8 +42,8 @@ const boardProcess = (width, height, board, players) => {
   const cellspace = Math.trunc(((w) / (halfplayers - 1)));
   const rowspace = Math.round(((h) / (halfplayers - Math.trunc(halfplayers / 2))));
 
-  console.log(rowspace);
-  console.log(cellspace);
+  // console.log(rowspace);
+  // console.log(cellspace);
   // crea las listas de posiciones
   const positions = [];
   const colpositions = colPositions(w, halfplayers, cellspace);

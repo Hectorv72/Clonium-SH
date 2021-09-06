@@ -2,7 +2,7 @@
 /* eslint-disable no-multi-spaces */
 const socketIO = require('socket.io');
 const http     = require('http');
-const { getGameBoard } = require('./clonium/game/clonium.module');
+const { socketGameBoard } = require('./clonium/game/clonium.module');
 // const { getBoard, updateBoard } = require('./board.module');
 
 const SocketConnect = (app, port) => {
@@ -33,7 +33,7 @@ const SocketConnect = (app, port) => {
 
     socket.on('add-dot-emitter', (data) => {
       if (!cooldownClick) {
-        const response = getGameBoard(io, data);
+        const response = socketGameBoard(data);
         io.sockets.in(data.room).emit('add-dot-receiver', response);
       } else {
         setTimeout(() => { cooldownClick = false; }, 500);

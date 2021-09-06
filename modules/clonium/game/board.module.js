@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { setGame, setBoard, setPlayers } = require('../process/gameboard.module');
 
 const getBoards = () => {
   const boards = fs.readFileSync('./resources/json/board.json');
@@ -30,18 +31,12 @@ const updateBoard = (room, turn, board) => {
   }
 };
 
-const saveBoard = (room, player, board) => {
+const saveBoard = (object) => {
   const list = getBoards();
-  const game = {
-    room: room,
-    players: player,
-    turn: 1,
-    board: board
-  };
 
-  list.push(game);
+  list.push(object);
   writeJsonFile(JSON.stringify(list));
-  return game;
+  return object;
 };
 
 const getBoard = (room) => {
@@ -54,4 +49,12 @@ const getBoard = (room) => {
   }
 };
 
-module.exports = { getBoard, updateBoard, saveBoard };
+const createBoard = (room, width = 8, height = 8, player = 2) => {
+  const board = setBoard(width, height);
+  const players = setPlayers(player);
+  const boardgame = setGame(width, height, board, players);
+  const game = { room: room, rows: height, cols: width, turn: 1, players: players, board: boardgame };
+  return saveBoard(game);
+};
+
+module.exports = { getBoard, updateBoard, saveBoard, createBoard };
